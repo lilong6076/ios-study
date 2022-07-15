@@ -1,0 +1,152 @@
+import UIKit
+import Masonry
+import SnapKit
+
+class ViewController: UIViewController {
+  
+    @IBOutlet weak var button: UIButton!
+    var view1 = UIView.init()
+    var view2 = UIView.init()
+    var view3 = UIView.init()
+    var view4 = UIView.init()
+    var view5 = UIView.init()
+    
+    var hiddenviewcount = 0
+    var nohiddenviewcount = 0
+    var stack = UIStackView()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Do any additional setup after loading the view.
+        self.view1.backgroundColor = .blue
+        self.view2.backgroundColor = .red
+        self.view3.backgroundColor = .brown
+        self.view4.backgroundColor = .yellow
+        self.view5.backgroundColor = .green
+        
+        self.stack = .init()
+//    axis: 子视图的布局方向
+//    Vertical: 垂直
+//    Horizontal: 水平
+//
+//    alignment: 子视图的对齐方式
+//    .fill: （默认） 尽可能铺满。
+//    .leading: 当 axis 是 vertical 的时候，按 leading 方向对齐 等价于： 当 axis 是 horizontal 的时候，按 top 方向对齐
+//    .trailing: 当 axis 是 vertical 的时候，按 trailing 方向对齐 等价于： 当 axis 是 horizontal 的时候，按 bottom 方向对齐
+//    bottom: 当 axis 是 horizontal 的时候，按 bottom 方向对齐 等价于： 当 axis 是 vertical 的时候，按 trailing 方向对齐。
+//    .center：居中对齐。
+//    .firstBaseline: 仅横轴有用， 按首行基线对齐
+//    .lastBaseline: 仅横轴有用， 按文章底部基线对齐。
+//
+//    distribution:子视图的分布比例（大小）
+//    .fill：（默认） 根据compression resistance和hugging两个 priority 布局
+//    .fillEqually：每个子视图的高度或宽度保持一致。
+//    .fillProportionally：根据intrinsic content size按比例布局。
+//    .equalSpacing：等间距布局，如果放不下，根据compression resistance压缩
+//    .equalCentering：等中间线间距布局，元素间距不小于 spacing 定义的值， 如果放不下，根据compression resistance压缩。
+        self.stack.axis = .horizontal
+        //self.stack.distribution = .fillEqually
+        self.stack.alignment = .bottom
+//        self.stack.frame = CGRect(x: 20 ,y: 100,width: 300,height: 100)
+        self.stack.spacing = 5//子视图间距
+        self.view.addSubview(self.stack)
+        
+        self.stack.snp.makeConstraints { make in
+            make.trailing.equalTo(self.view.snp.trailing).offset(-50)
+//            make.centerY.equalTo(self.view.snp.centerY)
+            make.top.equalTo(self.view.snp.top).offset(100)
+//            make.bottom.equalTo(self.view.snp.bottom).offset(-50)
+        }
+        self.button.snp.makeConstraints{make in
+            make.centerX.equalTo(self.view.snp.centerX)
+            make.centerY.equalTo(self.view.snp.centerY)
+        }
+        self.stack.addArrangedSubview(view1)
+        view1.snp.makeConstraints { make in
+            make.width.equalTo(80)
+            make.height.equalTo(50)
+        }
+        
+        self.stack.addArrangedSubview(view2)
+        view2.snp.makeConstraints { make in
+            make.width.equalTo(20)
+            make.height.equalTo(100)
+        }
+        
+        self.stack.addArrangedSubview(view3)
+        view3.snp.makeConstraints { make in
+            make.width.equalTo(50)
+            make.height.equalTo(30)
+        }
+        
+        self.stack.addArrangedSubview(view4)
+        view4.snp.makeConstraints { make in
+            make.width.equalTo(50)
+            make.height.equalTo(50)
+        }
+        
+        self.stack.addArrangedSubview(view5)
+        view5.snp.makeConstraints { make in
+            make.width.equalTo(50)
+            make.height.equalTo(80)
+        }
+        
+//        var button = UIButton()
+//        button.isEnabled = true
+//        button.frame = CGRect(x: 100, y: 500, width: 50, height: 30)
+//        button.setTitle("click", for: .normal)
+//        button.backgroundColor = .gray
+//        button.setTitleColor(UIColor.black, for: .normal)
+//        self.view.addSubview(button)
+//
+        
+//        button.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 0).isActive = true
+//        self.stack.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 0).isActive = true
+//        self.stack.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0).isActive = true
+//        button.addTarget(self, action: #selector(tapped), for: .touchUpInside)
+//
+//        /// 点击事件
+    }
+    @objc func tapped(sender: UIButton) {
+        for view in self.stack.arrangedSubviews{
+            if view.isHidden == false{
+                view.isHidden = true
+            }
+            break
+            
+            }
+    }
+    
+    
+    @IBAction func click(_ sender: Any) {
+        
+        if hiddenviewcount < self.stack.arrangedSubviews.count && hiddenviewcount >= nohiddenviewcount{
+            for view in self.stack.arrangedSubviews {
+                if view.isHidden == false {
+                    view.isHidden = true
+                    hiddenviewcount += 1
+                    print("count = \(hiddenviewcount)")
+                    if hiddenviewcount == self.stack.arrangedSubviews.count{
+                        nohiddenviewcount = hiddenviewcount
+                    }
+                    break
+                }
+            }
+            return
+        }
+
+        if nohiddenviewcount <= hiddenviewcount && hiddenviewcount == self.stack.arrangedSubviews.count{
+            for view in self.stack.arrangedSubviews{
+                if view.isHidden == true{
+                    view.isHidden = false
+                    nohiddenviewcount -= 1
+                    if nohiddenviewcount == 0{
+                        hiddenviewcount = nohiddenviewcount
+                    }
+                    print("nocount = \(nohiddenviewcount)")
+                    break
+                }
+            }
+        }
+    }
+}
